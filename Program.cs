@@ -9,7 +9,7 @@ namespace HttpClientTest
         static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         const int _maxRequestsCount = 100;
-        const int _retryCount = 3;
+        const int _retryCount = 5;
         const string _url = "http://localhost:60108/callback/abc";
 
         static long currentThreadCount = 0;
