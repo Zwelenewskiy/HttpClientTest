@@ -1,6 +1,7 @@
 ﻿using NLog;
 using System.Text;
 using System.Net;
+using System;
 
 namespace HttpClientTest
 {
@@ -13,7 +14,6 @@ namespace HttpClientTest
         const string _url = "http://localhost:60108/callback/abc";
 
         static long currentThreadCount = 0;
-        static HttpClient httpClient;
 
         static void CallBackTask(object o)
         {
@@ -23,29 +23,35 @@ namespace HttpClientTest
 
                 try
                 {
-                    Task<HttpResponseMessage> response_task = httpClient.PostAsync(_url, new StringContent("Very important information", Encoding.UTF8, "application/x-www-form-urlencoded"));
+                    string postData = "Very important information";
+                    var data = new UTF8Encoding().GetBytes(postData);
 
-                    if (response_task.Wait(300 * 1000))// 5 минут
+                    var httpClient = WebRequest.Create(_url);
+
+                    httpClient.ContentLength = data.Length;
+                    httpClient.Method = "POST";
+                    httpClient.ContentType = "application/x-www-form-urlencoded";
+
+                    using (var stream = httpClient.GetRequestStream())
                     {
-                        HttpResponseMessage response = response_task.Result;
-                        if (response.StatusCode == HttpStatusCode.OK)
-                        {
-                            string content = response.Content.ReadAsStringAsync().Result;
-                            content = content.Remove(0, 1);
-                            content = content.Remove(content.Length - 1, 1);
-
-                            var dateTimeEndRequest = DateTime.ParseExact(content, "dd.MM.yyyy HH:mm:ss:ffff", System.Globalization.CultureInfo.InvariantCulture);
-
-                            TimeSpan requestDuration = dateTimeEndRequest - dateTimeStartRequest;
-                            double totalMilliseconds = requestDuration.TotalMilliseconds;
-
-                            logger.Log(LogLevel.Info, $"{requestDuration.Minutes}.{requestDuration.Seconds}.{requestDuration.Milliseconds}");
-                        }
+                        stream.Write(data, 0, data.Length);
                     }
-                    else
+
+                    string content;
+                    using (var response = (HttpWebResponse)httpClient.GetResponse())
                     {
-                        logger.Log(LogLevel.Error, $"Истекло время ожидания ответа от сервера");
+                        content = new StreamReader(response.GetResponseStream()).ReadToEnd();
                     }
+
+                    content = content.Remove(0, 1);
+                    content = content.Remove(content.Length - 1, 1);
+
+                    var dateTimeEndRequest = DateTime.ParseExact(content, "dd.MM.yyyy HH:mm:ss:ffff", System.Globalization.CultureInfo.InvariantCulture);
+
+                    TimeSpan requestDuration = dateTimeEndRequest - dateTimeStartRequest;
+                    double totalMilliseconds = requestDuration.TotalMilliseconds;
+
+                    logger.Log(LogLevel.Info, $"{requestDuration.Minutes}:{requestDuration.Seconds}:{requestDuration.Milliseconds:000}");
                 }
                 finally
                 {
@@ -63,13 +69,6 @@ namespace HttpClientTest
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             ServicePointManager.Expect100Continue = false;
             ServicePointManager.DefaultConnectionLimit = 100;
-
-            var handler = new HttpClientHandler();
-            handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => { return true; };
-            handler.ClientCertificateOptions = ClientCertificateOption.Manual;
-            handler.UseProxy = false;
-
-            httpClient = new HttpClient(handler);
 
             for (int i = 0; i < _retryCount; i++)
             {
