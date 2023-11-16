@@ -1,0 +1,11 @@
+C:\Users\Александр\YandexDisk\Programming\C#\HttpClientTest\obj\Debug\HttpClientTest.csproj.AssemblyReference.cache
+C:\Users\Александр\YandexDisk\Programming\C#\HttpClientTest\obj\Debug\HttpClientTest.csproj.CoreCompileInputs.cache
+C:\Users\Александр\YandexDisk\Programming\C#\HttpClientTest\bin\Debug\NLog.config
+C:\Users\Александр\YandexDisk\Programming\C#\HttpClientTest\bin\Debug\HttpClientTest.exe.config
+C:\Users\Александр\YandexDisk\Programming\C#\HttpClientTest\bin\Debug\HttpClientTest.exe
+C:\Users\Александр\YandexDisk\Programming\C#\HttpClientTest\bin\Debug\HttpClientTest.pdb
+C:\Users\Александр\YandexDisk\Programming\C#\HttpClientTest\bin\Debug\NLog.dll
+C:\Users\Александр\YandexDisk\Programming\C#\HttpClientTest\bin\Debug\NLog.xml
+C:\Users\Александр\YandexDisk\Programming\C#\HttpClientTest\obj\Debug\HttpClientTest.csproj.CopyComplete
+C:\Users\Александр\YandexDisk\Programming\C#\HttpClientTest\obj\Debug\HttpClientTest.exe
+C:\Users\Александр\YandexDisk\Programming\C#\HttpClientTest\obj\Debug\HttpClientTest.pdb

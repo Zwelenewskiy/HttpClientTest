@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.7.34221.43
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33130.400
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpClientTest", "HttpClientTest.csproj", "{153E871E-1B27-48FE-B9BA-0CFE74BBA62E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpClientTest", "HttpClientTest.csproj", "{D017882E-7C99-4C35-9B2D-6CFBC6DDF08C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{153E871E-1B27-48FE-B9BA-0CFE74BBA62E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{153E871E-1B27-48FE-B9BA-0CFE74BBA62E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{153E871E-1B27-48FE-B9BA-0CFE74BBA62E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{153E871E-1B27-48FE-B9BA-0CFE74BBA62E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D017882E-7C99-4C35-9B2D-6CFBC6DDF08C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D017882E-7C99-4C35-9B2D-6CFBC6DDF08C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D017882E-7C99-4C35-9B2D-6CFBC6DDF08C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D017882E-7C99-4C35-9B2D-6CFBC6DDF08C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {3C044991-0F2E-4FE7-9EFC-B4356B4E5689}
+		SolutionGuid = {20E9521D-B61B-4C4A-B15D-D93924487E54}
 	EndGlobalSection
 EndGlobal
