@@ -4,7 +4,6 @@ using System.Net;
 using System.Threading;
 using System;
 using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace HttpClientTest
 {
@@ -13,52 +12,43 @@ namespace HttpClientTest
         static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         const int _maxRequestsCount = 100;
-        const int _retryCount = 5;
-        const string _url = "http://localhost:60108/callback/abc";
+        const int _retryCount = 3;
+        const string _url = "http://localhost:5262/WeatherForecast";
 
         static long currentThreadCount = 0;
         static HttpClient httpClient;
 
-        static void CallBackTask(object o)
+        static async void CallBackTask(object o)
         {
             try
             {
-                var dateTimeStartRequest = DateTime.Now;
+                DateTime dateTimeStartRequest = DateTime.Now;
 
-                try
+                HttpResponseMessage response = await httpClient.PostAsync(_url, new StringContent("Very important information", Encoding.UTF8, "application/x-www-form-urlencoded"));
+
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    Task<HttpResponseMessage> response_task = httpClient.PostAsync(_url, new StringContent("Very important information", Encoding.UTF8, "application/x-www-form-urlencoded"));
+                    string content = await response.Content.ReadAsStringAsync();
 
-                    if (response_task.Wait(300 * 1000))// 5 минут
-                    {
-                        HttpResponseMessage response = response_task.Result;
-                        if (response.StatusCode == HttpStatusCode.OK)
-                        {
-                            string content = response.Content.ReadAsStringAsync().Result;
-                            content = content.Remove(0, 1);
-                            content = content.Remove(content.Length - 1, 1);
+                    var dateTimeEndRequest = DateTime.ParseExact(content, "dd.MM.yyyy HH:mm:ss:ffff", System.Globalization.CultureInfo.InvariantCulture);
 
-                            var dateTimeEndRequest = DateTime.ParseExact(content, "dd.MM.yyyy HH:mm:ss:ffff", System.Globalization.CultureInfo.InvariantCulture);
+                    TimeSpan requestDuration = dateTimeEndRequest - dateTimeStartRequest;
+                    double totalMilliseconds = requestDuration.TotalMilliseconds;
 
-                            TimeSpan requestDuration = dateTimeEndRequest - dateTimeStartRequest;
-                            double totalMilliseconds = requestDuration.TotalMilliseconds;
-
-                            logger.Log(LogLevel.Info, $"{requestDuration.Minutes}.{requestDuration.Seconds}.{requestDuration.Milliseconds}");
-                        }
-                    }
-                    else
-                    {
-                        logger.Log(LogLevel.Error, $"Истекло время ожидания ответа от сервера");
-                    }
+                    logger.Log(LogLevel.Info, $"{requestDuration.Minutes}.{requestDuration.Seconds}.{requestDuration.Milliseconds}");
                 }
-                finally
+                else
                 {
-                    Interlocked.Decrement(ref currentThreadCount);
+                    logger.Log(LogLevel.Error, $"Ошибка отправки. StatusCode: {response.StatusCode}");
                 }
             }
             catch (Exception ex)
             {
-                logger.Log(LogLevel.Error, $"Ошибка отправки");
+                logger.Log(LogLevel.Error, "Ошибка отправки. Message: " + Environment.NewLine + ex.Message);
+            }
+            finally
+            {
+                Interlocked.Decrement(ref currentThreadCount);
             }
         }
 
@@ -74,6 +64,7 @@ namespace HttpClientTest
             handler.UseProxy = false;
 
             httpClient = new HttpClient(handler);
+            httpClient.Timeout = new TimeSpan(days: 0, hours: 0, minutes: 5, seconds: 0, milliseconds: 0);
 
             for (int i = 0; i < _retryCount; i++)
             {
